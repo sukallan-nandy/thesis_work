@@ -1,0 +1,46 @@
+# Settlement Prediction of Braced Excavations in Dhaka Soils — ML Pipeline
+
+**BSc Thesis, Department of Civil Engineering, BUET**
+
+Physics-informed machine learning framework for predicting maximum surface settlement (δv,max) and maximum lateral wall displacement (δh,max) in braced deep excavations, trained on finite element simulation data from PLAXIS 2D.
+
+## Overview
+
+Deep excavations in dense urban environments like Dhaka carry real risk of ground settlement and lateral wall movement that can damage adjacent structures and utilities. Traditional empirical methods (e.g. Peck, 1969; Clough & O'Rourke, 1990) offer quick estimates but don't capture the full interaction between soil stratigraphy, wall stiffness, and support system geometry specific to local ground conditions.
+
+This project combines high-fidelity finite element simulation with machine learning to build fast, accurate surrogate models for excavation-induced deformation, trained and validated against a four-layer Dhaka soil profile (Fill/Soft Clay, Madhupur Clay, Silty Sand, Dupi Tila Sand) modeled with the Hardening Soil constitutive model.
+
+## Methodology
+
+1. **Parametric FE simulation** — PLAXIS 2D models spanning excavation depth, wall embedment ratio, strut spacing, wall flexural rigidity, groundwater table depth, and layer-specific Hardening Soil parameters, sampled via Latin Hypercube Sampling.
+2. **Data preparation & EDA** — Cleaning and exploratory analysis of the simulation dataset (80 runs).
+3. **Model training** — Repeated cross-validation comparison of multiple regressors (Polynomial Ridge Regression, Gradient Boosting, XGBoost), with scaling kept inside the CV pipeline to avoid data leakage.
+4. **Evaluation** — Out-of-fold parity plots, residual analysis, and overfit checks for honest performance estimates.
+5. **Feature importance** — Permutation importance and standardized coefficients to identify governing parameters (groundwater table depth emerged as the dominant driver of δh,max).
+6. **Sensitivity analysis** — Parameter sweeps isolating the effect of each input on predicted deformation.
+7. **Governing equation extraction** — A closed-form polynomial (Ridge-regularized, degree-2) expressing δv,max and δh,max directly in terms of input parameters, including a simplified 10-term practitioner-friendly version.
+8. **Empirical validation** — Cross-checked against the Peck (1969) and Clough & O'Rourke (1990) design envelopes.
+
+## Repository contents
+
+| File | Description |
+|---|---|
+| `Settlement_ML_Pipeline_v2.ipynb` | Full analysis notebook — data loading, EDA, model training/evaluation, feature importance, sensitivity analysis, and governing equation derivation |
+| `Settlement_ML_Pipeline_v2.html` | Static rendered export of the notebook (view without running code) |
+
+## Tech stack
+
+Python · scikit-learn · XGBoost · pandas · matplotlib · PLAXIS 2D (finite element simulation)
+
+## Key findings
+
+- Polynomial Ridge Regression gave the best overall fit while remaining interpretable as a closed-form design equation.
+- Groundwater table depth was the most influential parameter for lateral wall displacement.
+- Predictions stayed within the bounds of established empirical envelopes, while offering site-specific accuracy for Dhaka soil conditions.
+
+## Author
+
+Sukallan Nandy — Civil Engineering, BUET
+
+---
+*This repository accompanies a BSc thesis submitted to the Department of Civil Engineering, BUET.*
